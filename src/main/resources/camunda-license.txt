@@ -1,0 +1,19 @@
+--------------- BEGIN CAMUNDA LICENSE KEY ---------------
+nCAZOAjDBS/vV9WDReT5C5Mb3IDNcQ9alJkwkQ0Pn0gGd28f6iOTa+uVC
+EnxP6kh8y/DI0EqNHq1+mx8s8NuC2vfA/N1ju8Z/f0T/MMFv6jO304AUb
+IOZiGx7Zikpsy9KzYwnOfK+d5JTjj89mjxMBc/m3kplKW24Q2brGR1A63
+BJjZUtQiIV0Np5hWXwrUrq/eRv6U4CWwYMYJUvAbFXEtrMz1CU+gbucEO
+4FywXYktJTaM0L3DTCwgl25zHZhTv/ygcZudo034TE1b4cSNZKh0ZMhFf
+JXUL/zTHM+JSskH0zscLgwmpuARKTY8E3mEsfSpVnlRGPMbRqDOcVQjQd
+SOFKLtPFZtc/I+Cncgc6ZjdGDTv1Am/I7xTvI/z+VcvJXKARcigurwmqt
+Ie2ZUopRGYhm+OK9IBxxejoIw1LsgmABRC8fRBlk71vngqmicfuWOHUlo
+nGoiI9hlT4zyTON/3ZJeBnP0LHVcKGSOBf+VxfKVP/A4wKeEtoADwdWsN
+XaNDScyw53H8d0BFxhX6/KYOW8ezmWhzjwKEZ4BVdF1gqJSlwFiQUXY9u
+p7J7uD3GwYlqjcYLaPVeI5KPTnG+rgNpu7IH07Tv6g51fSce3DLYa3xyO
+AOJ2CqmfJZE4hg7fM6ZXfsFonTtwr042REskofVN7y1qwJi9W1vxKV0E=;
+customer = mesoneer;
+expiryDate = 2022-10-26;
+cawemo = true;
+optimize = true;
+camundaBPM = true;
+---------------  END CAMUNDA LICENSE KEY  ---------------
