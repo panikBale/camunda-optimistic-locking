@@ -1,15 +1,27 @@
+#spring:
+##  security:
+##    user:
+##      name: user
+##      password: password
+#  datasource:
+#    url: jdbc:h2:file:./camunda-h2-database
+#    driverClassName: org.h2.Driver
+#    username: sa
+#    password: sa
+#  jpa:
+#    database-platform: org.hibernate.dialect.H2Dialect
+
 spring:
-#  security:
-#    user:
-#      name: user
-#      password: password
   datasource:
-    url: jdbc:h2:file:./camunda-h2-database
-    driverClassName: org.h2.Driver
-    username: sa
-    password: sa
+    url: jdbc:postgresql://localhost:5432/ralph.panitz?searchpath=public
+    username: postgres
+    password:
+  main:
+    allow-bean-definition-overriding: true
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 camunda.bpm:
   admin-user:

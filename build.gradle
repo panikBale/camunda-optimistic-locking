@@ -3,7 +3,13 @@ plugins {
     id "idea"
     id "application"
     id "io.spring.dependency-management" version "1.0.9.RELEASE"
-    id "org.springframework.boot" version "2.6.4"
+    id "org.springframework.boot" version "2.2.13.RELEASE"
+}
+
+ext {
+    camundaversionEnterprise = "7.13.0"
+    camundaversion = "7.13.0"
+    springbootversion = "2.2.13.RELEASE"
 }
 
 group "ch.umb.solutions.consulting"
@@ -18,10 +24,11 @@ targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
     maven {
-        url "https://app.camunda.com/nexus/repository/camunda-bpm-ee/"
+//        url "https://artifacts.camunda.com/artifactory/camunda-bpm-ee/"
+        url "https://artifacts.camunda.com/ui/native/private"
         credentials {
             username "trial_ralph_panitz_mesoneer_io"
-            password "752b916d-95c5-45c7-b"
+            password "d1229d52-6a90-4986-a"
         }
     }
     mavenCentral()
@@ -29,25 +36,22 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom "org.camunda.bpm:camunda-bom:7.17.3-ee"
+        mavenBom "org.camunda.bpm:camunda-bom:${camundaversionEnterprise}"
     }
 }
 
 dependencies {
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
 
-    implementation "org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter-rest:7.17.0"
-//    implementation group: 'org.camunda.bpm.springboot', name: 'camunda-bpm-spring-boot-starter-external-task-client', version: '7.17.0'
-    implementation group: 'org.camunda.bpm.springboot', name: 'camunda-bpm-spring-boot-starter-webapp-ee', version: '7.17.0-ee'
-//    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.6.4'
-    implementation group: 'com.h2database', name: 'h2', version: '2.1.212'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.6.4'
-    implementation group: 'org.camunda.bpm.extension', name: 'camunda-bpm-process-test-coverage-parent', version: '1.0.3', ext: 'pom'
-    implementation group: 'org.camunda.bpm.extension', name: 'camunda-bpm-process-test-coverage-junit5', version: '1.0.3'
-    implementation group: 'org.camunda.bpm.extension', name: 'camunda-bpm-process-test-coverage', version: '0.4.0'
-
-    testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
-    testImplementation group: 'org.camunda.bpm.assert', name: 'camunda-bpm-assert', version: '15.0.0'
-    testImplementation group: 'org.camunda.bpm.extension', name: 'camunda-bpm-assert-scenario', version: '1.1.1'
-    testImplementation group: 'org.camunda.bpm.extension.mockito', name: 'camunda-bpm-mockito', version: '5.16.0'
+    implementation "org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter-rest:${camundaversion}"
+    implementation "org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter-webapp:${camundaversionEnterprise}"
+    implementation "org.springframework.boot:spring-boot-starter-jdbc:${springbootversion}"
+    implementation "com.h2database:h2:2.1.214"
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
+    implementation group: 'org.camunda.spin', name: 'camunda-spin-core', version: '1.18.0'
+    implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
+    implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
 }
