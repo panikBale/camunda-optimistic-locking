@@ -1,23 +1,3 @@
 
 h
 8src/main/java/io/flowsquad/camunda/test/Application.java,d/9/d92bd6de437d0c744e222e2d0f419bf847ea4311
-„
-Tsrc/main/java/io/flowsquad/camunda/test/delegates/prototype/ServiceTaskDelegate.java,2/0/20b3f2b0f9d4bc33e397a0a9a9d8101c0ed179e1
-ƒ
-Ssrc/main/java/io/flowsquad/camunda/test/delegates/prototype/ThrowErrorDelegate.java,f/a/fa74c6686ecb143d4131b49e39b14ad8154fefa7
-¤
-tsrc/main/java/io/flowsquad/camunda/test/delegates/real/ecupliftOnboardingProcess/CreateMigrationProjectDelegate.java,e/2/e2f9278ac05f13500a672ed967d61e74c9240bf6
-£
-ssrc/main/java/io/flowsquad/camunda/test/delegates/real/ecupliftOnboardingProcess/DeleteMapperVariablesDelegate.java,2/4/241695d9c9d9be53828e4292d36e61241e0f9bbc
-£
-ssrc/main/java/io/flowsquad/camunda/test/delegates/real/ecupliftOnboardingProcess/OpenTasksReassignmentDelegate.java,a/a/aa841093458a0355bff3a03ccd2082a9c4035a3b
-›
-ksrc/main/java/io/flowsquad/camunda/test/delegates/real/ecupliftOnboardingProcess/SaveExternalUserInput.java,8/1/81a8657a33a2777dc61e8dfc98960ff1570ca97b
-¢
-rsrc/main/java/io/flowsquad/camunda/test/delegates/real/ecupliftOnboardingProcess/DueDateRecalculationDelegate.java,b/e/be87bedf276e0b2b2ae3403f5fd20e60cf4a48f4
-¥
-usrc/main/java/io/flowsquad/camunda/test/delegates/real/ecupliftOnboardingProcess/RemoveAccessFromProjectDelegate.java,4/1/41fbb0a1cdea83f2a9835b2026fd92791c725cfe
-‰
-Ysrc/main/java/io/flowsquad/camunda/test/delegates/prototype/CreateCollectionDelegate.java,c/0/c0e2b5fc9a73ec7d3705a4ba6f13fabfb022ca0a
-¤
-tsrc/main/java/io/flowsquad/camunda/test/delegates/real/ecupliftOnboardingProcess/CheckProjectCompletionDelegate.java,0/1/0150f6cfb6641d6055f0d69293fbbbc83f33b590

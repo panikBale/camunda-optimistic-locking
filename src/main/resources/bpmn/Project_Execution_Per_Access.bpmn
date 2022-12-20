@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1slixzc" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.6.0">
+  <bpmn:collaboration id="Collaboration_1jlxmnn">
+    <bpmn:participant id="Participant_1px18u0" name="Project Manager" processRef="EC_Uplift_Onboarding_Process" />
+    <bpmn:participant id="Participant_083q9m5" name="Project Manager" processRef="MigrationPerAccess" />
+    <bpmn:messageFlow id="Flow_1jli2tk" sourceRef="Activity_0x2bz9s" targetRef="Participant_083q9m5" />
+  </bpmn:collaboration>
+  <bpmn:process id="EC_Uplift_Onboarding_Process" name="EC Uplift Project" isExecutable="true">
+    <bpmn:startEvent id="Event_0r2jzka" name="Migration Start">
+      <bpmn:outgoing>Flow_07sop9r</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:callActivity id="Activity_0x2bz9s" name="Manage Access" camunda:asyncAfter="true" calledElement="MigrationPerAccess">
+      <bpmn:extensionElements>
+        <camunda:in variables="all" />
+        <camunda:out variables="all" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_09qgivt</bpmn:incoming>
+      <bpmn:outgoing>Flow_1gnkl0v</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:asyncAfter="true" camunda:collection="${accesses}" camunda:elementVariable="access">
+        <bpmn:extensionElements>
+          <camunda:failedJobRetryTimeCycle>R1/PT0S</camunda:failedJobRetryTimeCycle>
+        </bpmn:extensionElements>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="Event_0ipto66" name="Migration End">
+      <bpmn:incoming>Flow_1gnkl0v</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_092p1mh" name="project cancelled">
+      <bpmn:incoming>Flow_1512spj</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="Event_0hhko6c" attachedToRef="Activity_0x2bz9s">
+      <bpmn:outgoing>Flow_1512spj</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1qkn9qi" errorRef="Error_1af1ojc" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_07sop9r" sourceRef="Event_0r2jzka" targetRef="Activity_Create_Variable_Accesses" />
+    <bpmn:sequenceFlow id="Flow_1gnkl0v" sourceRef="Activity_0x2bz9s" targetRef="Event_0ipto66" />
+    <bpmn:sequenceFlow id="Flow_1512spj" sourceRef="Event_0hhko6c" targetRef="Event_092p1mh" />
+    <bpmn:sequenceFlow id="Flow_09qgivt" sourceRef="Activity_Create_Variable_Accesses" targetRef="Activity_0x2bz9s" />
+    <bpmn:serviceTask id="Activity_Create_Variable_Accesses" name="Create variable accesses" camunda:delegateExpression="${CreateVariableAccessDelegate}">
+      <bpmn:incoming>Flow_07sop9r</bpmn:incoming>
+      <bpmn:outgoing>Flow_09qgivt</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:textAnnotation id="TextAnnotation_1eefpyf">
+      <bpmn:text>initial data array of access id's
+
+"accesses:  [
+        {
+           "id": 1,
+           "status": OPEN
+        },
+        {
+           "id": 2,
+           "status": OPEN
+        }
+]</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_085chhd" sourceRef="Event_0r2jzka" targetRef="TextAnnotation_1eefpyf" />
+  </bpmn:process>
+  <bpmn:message id="Message_0vs4lqp" name="reassignTaskMessage" />
+  <bpmn:message id="Message_170gifw" name="externalUserInputProjectMessage" />
+  <bpmn:error id="Error_0mlx1a5" name="Error_Access_Cancelled" errorCode="1" camunda:errorMessage="Access cancelled" />
+  <bpmn:error id="Error_1af1ojc" name="Error_Project_Cancelled" errorCode="2" camunda:errorMessage="Project Cancelled" />
+  <bpmn:signal id="Signal_0hmi7qx" name="cancel_access_signal_${accessId}" />
+  <bpmn:process id="MigrationPerAccess" name="Access approval management" isExecutable="true" camunda:isStartableInTasklist="false">
+    <bpmn:startEvent id="Event_009ecw7">
+      <bpmn:outgoing>Flow_1p1phc3</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:callActivity id="Activity_1conirp" name="Obtains  Approvals" calledElement="GetApprovalsProcess">
+      <bpmn:extensionElements>
+        <camunda:in variables="all" />
+        <camunda:out variables="all" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1kpr5nu</bpmn:incoming>
+      <bpmn:outgoing>Flow_1kpd34h</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:exclusiveGateway id="Gateway_0c4pw2q" name="cancel project?">
+      <bpmn:incoming>Flow_1lum5zf</bpmn:incoming>
+      <bpmn:outgoing>Flow_06mlngp</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1qn4gvu</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="Event_1kc49wa" name="project cancelled">
+      <bpmn:incoming>Flow_1qn4gvu</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_003ms5w" errorRef="Error_1af1ojc" />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_1vkm51x" name="access cancelled">
+      <bpmn:incoming>Flow_06mlngp</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_1kvt4te">
+      <bpmn:incoming>Flow_1kpd34h</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="Event_0exew8z" attachedToRef="Activity_1conirp">
+      <bpmn:outgoing>Flow_1lum5zf</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1tlo2mg" errorRef="Error_0mlx1a5" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1p1phc3" sourceRef="Event_009ecw7" targetRef="Activity_0bf9fh1" />
+    <bpmn:sequenceFlow id="Flow_1kpr5nu" sourceRef="Activity_0bf9fh1" targetRef="Activity_1conirp" />
+    <bpmn:sequenceFlow id="Flow_1kpd34h" sourceRef="Activity_1conirp" targetRef="Event_1kvt4te" />
+    <bpmn:sequenceFlow id="Flow_1lum5zf" sourceRef="Event_0exew8z" targetRef="Gateway_0c4pw2q" />
+    <bpmn:sequenceFlow id="Flow_06mlngp" name="no" sourceRef="Gateway_0c4pw2q" targetRef="Event_1vkm51x">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!isProjectCancelled}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1qn4gvu" name="yes" sourceRef="Gateway_0c4pw2q" targetRef="Event_1kc49wa">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isProjectCancelled}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Activity_0bf9fh1" name="Get a list of approvals for each access" camunda:delegateExpression="${DetermineInternalExternalOrderTasksDelegate}">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_1p1phc3</bpmn:incoming>
+      <bpmn:outgoing>Flow_1kpr5nu</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:textAnnotation id="TextAnnotation_0x9f8np">
+      <bpmn:text>access:  {
+           "id": 1,
+           "status": OPEN
+        }</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_15clp2t" sourceRef="Event_009ecw7" targetRef="TextAnnotation_0x9f8np" />
+    <bpmn:textAnnotation id="TextAnnotation_08ji8pv">
+      <bpmn:text>isProjectCancelled ==TRUE?</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0yq0b2z" sourceRef="Gateway_0c4pw2q" targetRef="TextAnnotation_08ji8pv" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1jlxmnn">
+      <bpmndi:BPMNShape id="Participant_1px18u0_di" bpmnElement="Participant_1px18u0" isHorizontal="true">
+        <dc:Bounds x="157" y="120" width="953" height="530" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0r2jzka_di" bpmnElement="Event_0r2jzka">
+        <dc:Bounds x="259" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="241" y="375" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0n9oucw_di" bpmnElement="Activity_0x2bz9s">
+        <dc:Bounds x="627" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ipto66_di" bpmnElement="Event_0ipto66">
+        <dc:Bounds x="1029" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1013" y="375" width="68" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_092p1mh_di" bpmnElement="Event_092p1mh">
+        <dc:Bounds x="1029" y="410" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1006" y="453" width="83" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1eefpyf_di" bpmnElement="TextAnnotation_1eefpyf">
+        <dc:Bounds x="320" y="140" width="260" height="185" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1fha9c3_di" bpmnElement="Activity_Create_Variable_Accesses">
+        <dc:Bounds x="410" y="310" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1q038su_di" bpmnElement="Event_0hhko6c">
+        <dc:Bounds x="689" y="372" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="665" y="415" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_07sop9r_di" bpmnElement="Flow_07sop9r">
+        <di:waypoint x="295" y="350" />
+        <di:waypoint x="410" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gnkl0v_di" bpmnElement="Flow_1gnkl0v">
+        <di:waypoint x="727" y="350" />
+        <di:waypoint x="1029" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1512spj_di" bpmnElement="Flow_1512spj">
+        <di:waypoint x="707" y="408" />
+        <di:waypoint x="707" y="428" />
+        <di:waypoint x="1029" y="428" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_085chhd_di" bpmnElement="Association_085chhd">
+        <di:waypoint x="290" y="338" />
+        <di:waypoint x="320" y="309" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09qgivt_di" bpmnElement="Flow_09qgivt">
+        <di:waypoint x="510" y="350" />
+        <di:waypoint x="627" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_083q9m5_di" bpmnElement="Participant_083q9m5" isHorizontal="true">
+        <dc:Bounds x="157" y="700" width="953" height="450" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_009ecw7_di" bpmnElement="Event_009ecw7">
+        <dc:Bounds x="215" y="902" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_101l7r9_di" bpmnElement="Activity_1conirp">
+        <dc:Bounds x="741" y="880" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0c4pw2q_di" bpmnElement="Gateway_0c4pw2q" isMarkerVisible="true">
+        <dc:Bounds x="796" y="1005" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="853" y="1023" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0m2l0eg_di" bpmnElement="Event_1kc49wa">
+        <dc:Bounds x="663" y="1072" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="640" y="1115" width="83" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1vkm51x_di" bpmnElement="Event_1vkm51x">
+        <dc:Bounds x="923" y="1072" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="900" y="1115" width="84" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1kvt4te_di" bpmnElement="Event_1kvt4te">
+        <dc:Bounds x="1053" y="902" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_139ikh7_di" bpmnElement="Activity_0bf9fh1">
+        <dc:Bounds x="390" y="880" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0x9f8np_di" bpmnElement="TextAnnotation_0x9f8np">
+        <dc:Bounds x="240" y="810" width="130" height="84" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_08ji8pv_di" bpmnElement="TextAnnotation_08ji8pv">
+        <dc:Bounds x="870" y="970" width="183" height="35" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0jarrf9_di" bpmnElement="Event_0exew8z">
+        <dc:Bounds x="803" y="942" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1p1phc3_di" bpmnElement="Flow_1p1phc3">
+        <di:waypoint x="251" y="920" />
+        <di:waypoint x="390" y="920" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kpr5nu_di" bpmnElement="Flow_1kpr5nu">
+        <di:waypoint x="490" y="920" />
+        <di:waypoint x="741" y="920" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kpd34h_di" bpmnElement="Flow_1kpd34h">
+        <di:waypoint x="841" y="920" />
+        <di:waypoint x="1053" y="920" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lum5zf_di" bpmnElement="Flow_1lum5zf">
+        <di:waypoint x="821" y="978" />
+        <di:waypoint x="821" y="1005" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06mlngp_di" bpmnElement="Flow_06mlngp">
+        <di:waypoint x="821" y="1055" />
+        <di:waypoint x="821" y="1090" />
+        <di:waypoint x="923" y="1090" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="864" y="1070" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qn4gvu_di" bpmnElement="Flow_1qn4gvu">
+        <di:waypoint x="821" y="1055" />
+        <di:waypoint x="821" y="1090" />
+        <di:waypoint x="699" y="1090" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="759" y="1070" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_15clp2t_di" bpmnElement="Association_15clp2t">
+        <di:waypoint x="238" y="903" />
+        <di:waypoint x="241" y="894" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0yq0b2z_di" bpmnElement="Association_0yq0b2z">
+        <di:waypoint x="840" y="1024" />
+        <di:waypoint x="904" y="1005" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1jli2tk_di" bpmnElement="Flow_1jli2tk">
+        <di:waypoint x="677" y="390" />
+        <di:waypoint x="677" y="700" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
